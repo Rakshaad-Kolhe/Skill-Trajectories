@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill Trajectory Simulator — Decision Intelligence Prototype</title>
+  <meta name="description" content="Interactive simulation system visualizing how compounding, constraints, and uncertainty shape long-term learning trajectories." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ── Header ─────────────────────────────────────── -->
+  <header class="app-header">
+    <h1>Skill Trajectory Simulator</h1>
+    <p class="subtitle">
+      Explore how study habits, sleep, burnout, and financial stress shape
+      long-term skill growth — with uncertainty quantified across 100 simulations.
+    </p>
+  </header>
+
+  <!-- ── Top: Inputs + Scenarios ────────────────────── -->
+  <section class="top-grid">
+
+    <!-- Input Panel -->
+    <div class="glass-card">
+      <div class="card-title">Your Configuration</div>
+
+      <div class="input-group">
+        <label class="input-label">
+          Study Hours / Day
+          <span class="value-display" id="studyHoursValue">3 hrs</span>
+        </label>
+        <input type="range" id="studyHours" min="0" max="6" step="0.5" value="3" />
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Practice Quality</label>
+        <select id="practiceQuality">
+          <option value="Low">Low — Passive review</option>
+          <option value="Medium" selected>Medium — Active recall</option>
+          <option value="High">High — Deliberate problem solving</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">
+          Sleep Hours / Day
+          <span class="value-display" id="sleepHoursValue">7 hrs</span>
+        </label>
+        <input type="range" id="sleepHours" min="4" max="9" step="0.5" value="7" />
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">
+          Distraction Hours / Day
+          <span class="value-display" id="distractionHoursValue">2 hrs</span>
+        </label>
+        <input type="range" id="distractionHours" min="0" max="4" step="0.5" value="2" />
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Financial Stress Level</label>
+        <select id="financialStress">
+          <option value="Low">Low — Stable financial situation</option>
+          <option value="Medium" selected>Medium — Some financial pressure</option>
+          <option value="High">High — Significant financial constraints</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Scenario Legend -->
+    <div class="glass-card">
+      <div class="card-title">Preset Scenarios (Charts 1 & 2)</div>
+
+      <div class="scenario-item">
+        <div class="scenario-dot" style="background: #22d3ee;"></div>
+        <div>
+          <h4>Scenario A — Steady &amp; Sustainable</h4>
+          <p>2 hrs/day · High quality · 8 hrs sleep · Low stress. Consistency over intensity.</p>
+        </div>
+      </div>
+
+      <div class="scenario-item">
+        <div class="scenario-dot" style="background: #f472b6;"></div>
+        <div>
+          <h4>Scenario B — Intense Grind</h4>
+          <p>6 hrs/day · Medium quality · 5 hrs sleep · Medium stress. High burnout risk.</p>
+        </div>
+      </div>
+
+      <div class="scenario-item">
+        <div class="scenario-dot" style="background: #fbbf24;"></div>
+        <div>
+          <h4>Scenario C — Inconsistent Bursts</h4>
+          <p>4 hrs/day · Low quality · 6 hrs sleep · High stress. Erratic pattern.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.2rem; padding: 0.7rem 0.8rem; background: rgba(34,211,238,0.06); border-radius: 8px; border: 1px solid rgba(34,211,238,0.12);">
+        <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
+          <strong style="color: var(--accent);">How to read:</strong>
+          Charts 1 &amp; 2 compare these three preset scenarios.
+          Chart 3 shows <em>your</em> custom configuration with the uncertainty band from Monte Carlo simulation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Charts ─────────────────────────────────────── -->
+  <section class="charts-grid">
+    <div class="glass-card">
+      <div class="chart-wrapper">
+        <canvas id="chartSkillGrowth"></canvas>
+      </div>
+    </div>
+    <div class="glass-card">
+      <div class="chart-wrapper">
+        <canvas id="chartBurnoutSkill"></canvas>
+      </div>
+    </div>
+    <div class="glass-card chart-full">
+      <div class="chart-wrapper">
+        <canvas id="chartUncertainty"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Cognitive Bias Panel ───────────────────────── -->
+  <section class="glass-card" style="margin-bottom: 1.5rem;">
+    <div class="card-title">Cognitive Bias Analysis</div>
+    <div id="biasExplanations">
+      <!-- Populated by app.js -->
+    </div>
+  </section>
+
+  <!-- ── Disclaimer ─────────────────────────────────── -->
+  <footer class="disclaimer">
+    <span class="disclaimer-label">Transparency Notice</span>
+    <p>
+      This system does not predict success, income, or careers.
+      It visualizes how compounding, constraints, and uncertainty shape learning trajectories.
+      All simulations use controlled assumptions with explicit randomness — results are illustrative, not prescriptive.
+    </p>
+  </footer>
+
+</div>
+
+<!-- ── Scripts ───────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="simulation.js"></script>
+<script src="scenarios.js"></script>
+<script src="charts.js"></script>
+<script src="biases.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
