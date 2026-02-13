@@ -58,14 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function runAll() {
         const params = readParams();
 
-        // Scenario comparison
-        const scenarioResults = runAllScenarios();
-        renderSkillGrowthChart(scenarioResults);
-        renderBurnoutSkillChart(scenarioResults);
-
         // User's custom configuration with uncertainty
         const userResult = runMonteCarloSimulation(params);
+
+        // Scenario comparison (Pass user result now!)
+        const scenarioResults = runAllScenarios();
+        renderSkillGrowthChart(scenarioResults, userResult);
+        renderBurnoutSkillChart(scenarioResults, userResult);
+
+        // User charts
         renderUncertaintyChart(userResult);
+        renderBurnoutUncertaintyChart(userResult);
 
         // Bias detection
         renderBiasPanel(params);

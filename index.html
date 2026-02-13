@@ -1,159 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skill Trajectory Simulator — Decision Intelligence Prototype</title>
-  <meta name="description" content="Interactive simulation system visualizing how compounding, constraints, and uncertainty shape long-term learning trajectories." />
+  <title>Skill Trajectory Simulator — Cyborg Dashboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<div class="app-wrapper">
+  <div class="cyborg-wrapper">
 
-  <!-- ── Header ─────────────────────────────────────── -->
-  <header class="app-header">
-    <h1>Skill Trajectory Simulator</h1>
-    <p class="subtitle">
-      Explore how study habits, sleep, burnout, and financial stress shape
-      long-term skill growth — with uncertainty quantified across 100 simulations.
-    </p>
-  </header>
-
-  <!-- ── Top: Inputs + Scenarios ────────────────────── -->
-  <section class="top-grid">
-
-    <!-- Input Panel -->
-    <div class="glass-card">
-      <div class="card-title">Your Configuration</div>
-
-      <div class="input-group">
-        <label class="input-label">
-          Study Hours / Day
-          <span class="value-display" id="studyHoursValue">3 hrs</span>
-        </label>
-        <input type="range" id="studyHours" min="0" max="6" step="0.5" value="3" />
+    <!-- ── LEFT: Control Panel ───────────────────────── -->
+    <aside class="control-panel glass-panel">
+      <div class="panel-header">
+        <h2>Interactive Control Panel</h2>
+        <div class="status-dot"></div>
       </div>
 
-      <div class="input-group">
-        <label class="input-label">Practice Quality</label>
-        <select id="practiceQuality">
+      <!-- Inputs -->
+      <div class="control-group">
+        <div class="input-header">
+          <i class="icon-clock"></i> Daily Learning Hours
+          <span class="toggle-switch"></span>
+        </div>
+        <div class="range-wrapper">
+          <input type="range" id="studyHours" min="0" max="6" step="0.5" value="3" />
+          <span class="value-display" id="studyHoursValue">3 hrs/day</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="input-header">
+          <i class="icon-brain"></i> Practice Quality
+        </label>
+        <select id="practiceQuality" class="cyborg-select">
           <option value="Low">Low — Passive review</option>
           <option value="Medium" selected>Medium — Active recall</option>
-          <option value="High">High — Deliberate problem solving</option>
+          <option value="High">High — Deliberate</option>
         </select>
       </div>
 
-      <div class="input-group">
-        <label class="input-label">
-          Sleep Hours / Day
+      <div class="control-group">
+        <div class="input-header">
+          <i class="icon-moon"></i> Sleep / Regeneration
           <span class="value-display" id="sleepHoursValue">7 hrs</span>
-        </label>
-        <input type="range" id="sleepHours" min="4" max="9" step="0.5" value="7" />
+        </div>
+        <div class="range-wrapper color-purple">
+          <input type="range" id="sleepHours" min="4" max="9" step="0.5" value="7" />
+        </div>
       </div>
 
-      <div class="input-group">
-        <label class="input-label">
-          Distraction Hours / Day
+      <div class="control-group">
+        <div class="input-header">
+          <i class="icon-fire"></i> Distraction Level
           <span class="value-display" id="distractionHoursValue">2 hrs</span>
-        </label>
-        <input type="range" id="distractionHours" min="0" max="4" step="0.5" value="2" />
+        </div>
+        <div class="range-wrapper color-orange">
+          <input type="range" id="distractionHours" min="0" max="4" step="0.5" value="2" />
+        </div>
       </div>
 
-      <div class="input-group">
-        <label class="input-label">Financial Stress Level</label>
-        <select id="financialStress">
-          <option value="Low">Low — Stable financial situation</option>
-          <option value="Medium" selected>Medium — Some financial pressure</option>
-          <option value="High">High — Significant financial constraints</option>
+      <div class="control-group">
+        <label class="input-header">
+          <i class="icon-wallet"></i> Financial Constraint
+        </label>
+        <select id="financialStress" class="cyborg-select">
+          <option value="Low">Low Stress</option>
+          <option value="Medium" selected>Medium Stress</option>
+          <option value="High">High Stress</option>
         </select>
       </div>
-    </div>
 
-    <!-- Scenario Legend -->
-    <div class="glass-card">
-      <div class="card-title">Preset Scenarios (Charts 1 & 2)</div>
-
-      <div class="scenario-item">
-        <div class="scenario-dot" style="background: #22d3ee;"></div>
-        <div>
-          <h4>Scenario A — Steady &amp; Sustainable</h4>
-          <p>2 hrs/day · High quality · 8 hrs sleep · Low stress. Consistency over intensity.</p>
+      <!-- Strategy / Presets Visual -->
+      <div class="strategy-section">
+        <h3>Scenario Presets</h3>
+        <div class="strategy-toggles">
+          <button class="strategy-btn" onclick="applyPreset('A')">Average</button>
+          <button class="strategy-btn" onclick="applyPreset('B')">Grind</button>
+          <button class="strategy-btn active" onclick="applyPreset('C')">Custom</button>
         </div>
+        <!-- Hidden logic for now, just visual placeholder or we hook it up later if requested -->
       </div>
 
-      <div class="scenario-item">
-        <div class="scenario-dot" style="background: #f472b6;"></div>
-        <div>
-          <h4>Scenario B — Intense Grind</h4>
-          <p>6 hrs/day · Medium quality · 5 hrs sleep · Medium stress. High burnout risk.</p>
+      <div class="disclaimer-mini">
+        <p>SIMULATING ALTERNATE FUTURES</p>
+      </div>
+    </aside>
+
+    <!-- ── RIGHT: Dashboard Grid ─────────────────────── -->
+    <main class="dashboard-content">
+
+      <!-- Top: Main Trajectory -->
+      <section class="main-chart-card glass-panel">
+        <div class="card-header">
+          <h3>Real-Time Trajectory Graph</h3>
+          <span class="card-subtitle">Scenario Comparison Vs. Your Strategy</span>
         </div>
-      </div>
-
-      <div class="scenario-item">
-        <div class="scenario-dot" style="background: #fbbf24;"></div>
-        <div>
-          <h4>Scenario C — Inconsistent Bursts</h4>
-          <p>4 hrs/day · Low quality · 6 hrs sleep · High stress. Erratic pattern.</p>
+        <div class="chart-container-large">
+          <canvas id="chartSkillGrowth"></canvas>
         </div>
-      </div>
+      </section>
 
-      <div style="margin-top: 1.2rem; padding: 0.7rem 0.8rem; background: rgba(34,211,238,0.06); border-radius: 8px; border: 1px solid rgba(34,211,238,0.12);">
-        <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
-          <strong style="color: var(--accent);">How to read:</strong>
-          Charts 1 &amp; 2 compare these three preset scenarios.
-          Chart 3 shows <em>your</em> custom configuration with the uncertainty band from Monte Carlo simulation.
-        </p>
-      </div>
-    </div>
-  </section>
+      <!-- Bottom: Key Metrics Grid -->
+      <section class="metrics-grid">
 
-  <!-- ── Charts ─────────────────────────────────────── -->
-  <section class="charts-grid">
-    <div class="glass-card">
-      <div class="chart-wrapper">
-        <canvas id="chartSkillGrowth"></canvas>
-      </div>
-    </div>
-    <div class="glass-card">
-      <div class="chart-wrapper">
-        <canvas id="chartBurnoutSkill"></canvas>
-      </div>
-    </div>
-    <div class="glass-card chart-full">
-      <div class="chart-wrapper">
-        <canvas id="chartUncertainty"></canvas>
-      </div>
-    </div>
-  </section>
+        <!-- Card 1: Burnout Tradeoff -->
+        <div class="stat-card glass-panel">
+          <div class="card-header-sm">
+            <h4>Efficiency Trade-off</h4>
+            <i class="icon-more"></i>
+          </div>
+          <div class="chart-container-sm">
+            <canvas id="chartBurnoutSkill"></canvas>
+          </div>
+        </div>
 
-  <!-- ── Cognitive Bias Panel ───────────────────────── -->
-  <section class="glass-card" style="margin-bottom: 1.5rem;">
-    <div class="card-title">Cognitive Bias Analysis</div>
-    <div id="biasExplanations">
-      <!-- Populated by app.js -->
-    </div>
-  </section>
+        <!-- Card 2: Burnout Risk -->
+        <div class="stat-card glass-panel">
+          <div class="card-header-sm">
+            <h4>Burnout Forecast</h4>
+            <i class="icon-more"></i>
+          </div>
+          <div class="chart-container-sm">
+            <canvas id="chartUserBurnout"></canvas>
+          </div>
+        </div>
 
-  <!-- ── Disclaimer ─────────────────────────────────── -->
-  <footer class="disclaimer">
-    <span class="disclaimer-label">Transparency Notice</span>
-    <p>
-      This system does not predict success, income, or careers.
-      It visualizes how compounding, constraints, and uncertainty shape learning trajectories.
-      All simulations use controlled assumptions with explicit randomness — results are illustrative, not prescriptive.
-    </p>
-  </footer>
+        <!-- Card 3: Comparison/Bias -->
+        <div class="stat-card glass-panel">
+          <div class="card-header-sm">
+            <h4>Cognitive Analysis</h4>
+            <i class="icon-more"></i>
+          </div>
+          <div id="biasExplanations" class="bias-scroll-container">
+            <!-- Populated via JS -->
+          </div>
+        </div>
 
-</div>
+      </section>
 
-<!-- ── Scripts ───────────────────────────────────────── -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="simulation.js"></script>
-<script src="scenarios.js"></script>
-<script src="charts.js"></script>
-<script src="biases.js"></script>
-<script src="app.js"></script>
+      <!-- Comparison chart hidden or moved? 
+           The user wants the LOOK of the image. The image has one big chart.
+           I'll put the comparison chart (chartSkillGrowth) hidden or maybe swap it? 
+           Actually, the "Main Chart" in the image looks like a comparison/growth chart.
+           I will put Chart 1 (Comparison) as the main one, or keep Chart 3 (Uncertainty). 
+           The dashboard image shows "Projected Career Outcomes" which looks like Uncertainty branches.
+           I'Il stick with ChartUncertainty as the main hero.
+           I'll keep chartSkillGrowth hidden for now to match the clean look, or maybe toggle it.
+           Let's hide it effectively but keep the canvas in DOM if needed, or just swap logic.
+           I'll leave chartSkillGrowth out of the visible HTML for this pass to match the clean single-main-chart aesthetic.
+      -->
 
+    </main>
+  </div>
+
+  <!-- ── Scripts ────────────────────────────────────── -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <!-- Plugin for annotation -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+
+  <script src="simulation.js"></script>
+  <script src="scenarios.js"></script>
+  <script src="charts.js"></script>
+  <script src="biases.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Quick inline script to handle strategy buttons visual state if I don't update app.js yet -->
+  <script>
+    function applyPreset(type) {
+      // Placeholder for future logic
+      document.querySelectorAll('.strategy-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
 </body>
+
 </html>
