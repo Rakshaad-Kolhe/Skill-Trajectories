@@ -105,16 +105,17 @@ function renderBurnoutSkillChart(scenarioResults, userResult) {
         burnoutArr.map((b, i) => ({ x: b, y: skillArr[i], month: i }));
 
     // Presets
+    // Shorten labels for the small card
+    const shortLabel = (lbl) => lbl.replace('Scenario ', '').replace(' — ', ': ');
+
     const datasets = Object.values(scenarioResults).map(s => ({
-        label: s.label,
+        label: shortLabel(s.label),
         data: formatData(s.data.meanBurnout, s.data.meanSkill),
         borderColor: s.color,
         backgroundColor: s.color + '40',
         borderWidth: 2,
-        // Make the last point (Month 36) larger to indicate "End"
-        pointRadius: (ctx) => ctx.dataIndex === 36 ? 5 : 0,
-        pointStyle: (ctx) => ctx.dataIndex === 36 ? 'circle' : 'circle',
-        pointHoverRadius: 6,
+        pointRadius: (ctx) => ctx.dataIndex === 36 ? 4 : 0,
+        pointHoverRadius: 5,
         showLine: true,
         tension: 0.3,
         fill: false,
@@ -122,16 +123,15 @@ function renderBurnoutSkillChart(scenarioResults, userResult) {
 
     // User Trace
     datasets.push({
-        label: 'Your Trajectory',
+        label: 'You',
         data: formatData(userResult.meanBurnout, userResult.meanSkill),
         borderColor: '#e2e8f0',
         backgroundColor: '#e2e8f0',
         borderWidth: 2.5,
         borderDash: [4, 4],
-        // Make the last point larger and first point visible
-        pointRadius: (ctx) => ctx.dataIndex === 36 ? 6 : (ctx.dataIndex === 0 ? 4 : 0),
-        pointBackgroundColor: (ctx) => ctx.dataIndex === 0 ? '#10b981' : '#e2e8f0', // Green for start
-        pointHoverRadius: 7,
+        pointRadius: (ctx) => ctx.dataIndex === 36 ? 5 : (ctx.dataIndex === 0 ? 3 : 0),
+        pointBackgroundColor: (ctx) => ctx.dataIndex === 0 ? '#10b981' : '#e2e8f0',
+        pointHoverRadius: 6,
         showLine: true,
         tension: 0.3,
         fill: false,
@@ -149,15 +149,28 @@ function renderBurnoutSkillChart(scenarioResults, userResult) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: { padding: { top: 4, bottom: 0, left: 0, right: 4 } },
             animation: { duration: 600, easing: 'easeOutQuart' },
             plugins: {
-                legend: baseLegend(),
-                title: { display: true, text: 'Burnout vs Skill Trade-off (Trajectory)', color: '#e2e8f0', font: { ...CHART_FONT, size: 15, weight: '600' }, padding: { bottom: 16 } },
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        color: '#cbd5e1',
+                        font: { ...CHART_FONT, size: 9 },
+                        padding: 8,
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        boxWidth: 6,
+                        boxHeight: 6,
+                    },
+                },
+                title: { display: true, text: 'Burnout vs Skill Trade-off', color: '#e2e8f0', font: { ...CHART_FONT, size: 12, weight: '600' }, padding: { top: 0, bottom: 6 } },
                 tooltip: {
                     callbacks: {
                         label: function (context) {
                             const pt = context.raw;
-                            return `${context.dataset.label} — Month ${pt.month}: Skill ${pt.y.toFixed(0)}, Burnout ${(pt.x * 100).toFixed(0)}%`;
+                            return `${context.dataset.label} — M${pt.month}: Skill ${pt.y.toFixed(0)}, Burn ${(pt.x * 100).toFixed(0)}%`;
                         }
                     }
                 },
@@ -168,32 +181,38 @@ function renderBurnoutSkillChart(scenarioResults, userResult) {
                             xMin: 0.7,
                             xMax: 0.7,
                             borderColor: 'rgba(239, 68, 68, 0.5)',
-                            borderWidth: 2,
-                            borderDash: [6, 6],
+                            borderWidth: 1.5,
+                            borderDash: [4, 4],
                             label: {
-                                content: 'Burnout Threshold (>0.7)',
+                                content: 'Danger >0.7',
                                 display: true,
                                 position: 'start',
                                 color: 'rgba(239, 68, 68, 0.8)',
-                                font: { size: 10 }
+                                font: { size: 8 }
                             }
                         },
                         box1: {
                             type: 'box',
                             xMin: 0.7,
                             xMax: 1.0,
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.08)',
                             borderWidth: 0
                         }
                     }
                 }
             },
             scales: {
-                ...baseScales('Mean Burnout Risk (0 - 1)', 'Skill Level'),
                 x: {
-                    ...baseScales('Mean Burnout Risk (0 - 1)', 'Skill Level').x,
+                    title: { display: true, text: 'Burnout Risk', color: '#94a3b8', font: { ...CHART_FONT, size: 10 } },
+                    ticks: { color: TICK_COLOR, font: { ...CHART_FONT, size: 10 }, maxTicksLimit: 6 },
+                    grid: { color: GRID_COLOR },
                     min: 0,
                     max: 1.0
+                },
+                y: {
+                    title: { display: true, text: 'Skill', color: '#94a3b8', font: { ...CHART_FONT, size: 10 } },
+                    ticks: { color: TICK_COLOR, font: { ...CHART_FONT, size: 10 } },
+                    grid: { color: GRID_COLOR },
                 }
             },
         },
